@@ -22,11 +22,8 @@ public:
     }
     myString(string mstring){
         this->size = mstring.length();
-        cout << this->size << endl;
         const char* temp = mstring.c_str();
-        cout << temp << endl;
         strcpy(this->mystring, temp);
-        cout << this->mystring << endl;
     }
     ~myString(){
 
@@ -56,7 +53,6 @@ int main() {
     string input03;
     cin.ignore(32767, '\n');
     cin >> input03;
-    cout << "input03 " << input03 << endl;
     myString example03(input03);
     cout << "Let see what we get inside the Class this time:" << endl;
     cout << example03.get_mystring() << "\t" << example03.get_size() << endl;
