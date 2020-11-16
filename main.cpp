@@ -52,12 +52,12 @@ int main() {
     cout << example01.get_mystring() << "\t" << example01.get_size() << endl;
     cout << "Checking second conctructor new string will contains 10 symbols:" << endl;
     int size = 11;
-    char* input02 = new char[size]{};
-    InputLine(input02,size);
+    char *input02 = new char[size]{};
+    InputLine(input02, size);
     myString example02(input02, strlen(input02));
     cout << "Let see what we get inside the Class, now:" << endl;
     cout << example02.get_mystring() << "\t" << example02.get_size() << endl;
-    delete [] input02;
+    delete[] input02;
     cout << "Checking third conctructor, Let it be \"Third one\":" << endl;
     string input03 = "Third one";
     myString example03(input03);
@@ -66,7 +66,6 @@ int main() {
     myString default_str;
     cout << "And the last - check default constructor:" << endl;
     cout << default_str.get_size() << "\t" << default_str.get_mystring() << endl;
-    return 0;
 }
 void InputLine(char str[], const int n){
     //SetConsoleCP(1251);
