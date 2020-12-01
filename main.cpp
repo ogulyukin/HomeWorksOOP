@@ -15,6 +15,7 @@ bool operator<(Fraction one, Fraction two);
 bool operator<=(Fraction one, Fraction two);
 bool operator>(Fraction one, Fraction two);
 bool operator>=(Fraction one, Fraction two);
+bool operator==(Fraction one, Fraction two);
 void casting_fractions(Fraction& one, Fraction& two);
 int check_int_input();
 int char_input(char arr[], bool& succes);
@@ -135,6 +136,10 @@ bool operator>(Fraction one, Fraction two){
 bool operator>=(Fraction one, Fraction two){
     casting_fractions(one, two);
     return (one.get_numerator() >= two.get_numerator())?true: false;
+}
+bool operator==(Fraction one, Fraction two){
+    casting_fractions(one, two);
+    return (one.get_numerator() == two.get_numerator())?true: false;
 }
 void casting_fractions(Fraction& one, Fraction& two){
     one.to_improper().set_numerator(one.get_numerator()*two.get_denumenator());
