@@ -1,194 +1,100 @@
 #include <iostream>
-#include "Fraction.h"
-#define line "---------------\n"
-#define int_input 20
+#include "string.h"
 using namespace std;
 using std::ostream;
-using std::istream;
-inline Fraction operator+(Fraction one, Fraction two);
-inline Fraction operator-(Fraction one, Fraction two);
-inline Fraction operator*(Fraction one, Fraction two);
-inline Fraction operator/(Fraction one, Fraction two);
-ostream& operator<<(ostream& os, Fraction& fract);
-istream& operator>>(istream& os, Fraction& fract);
-bool operator<(Fraction one, Fraction two);
-bool operator<=(Fraction one, Fraction two);
-bool operator>(Fraction one, Fraction two);
-bool operator>=(Fraction one, Fraction two);
-bool operator==(Fraction one, Fraction two);
-void casting_fractions(Fraction& one, Fraction& two);
-int check_int_input();
-int char_input(char arr[], bool& succes);
-
+class String;
+String operator+(String &one, String &two);
+void operator+=(String &one, String &two);
+ostream& operator<<(ostream& ist, String &one);
+class String{
+    int size;
+    char* str;
+public:
+    int get_size()const{
+        return size;
+    }
+    const char* get_str()const{
+        return str;
+    }
+    String(int size = 80){
+        this->size = size;
+        this->str = new char[size]{};
+        cout << "Default Constructor\t" << this << endl;
+    }
+    String(const char str[]){
+        this->size =  strlen(str);
+        this->str = new char[size];
+        for (int i = 0; str[i]; i++){
+            this->str[i] = str[i];
+        }
+        cout << "String Constructor\t" << this << endl;
+    }
+    String(const String& other){
+        this->size =  other.size;
+        this->str = new char[size]{};
+        for (int i = 0; other.str[i]; i++){
+            this->str[i] = other.str[i];
+        }
+        cout << "Copy Constructor\t" << this << endl;
+    }
+    ~String(){
+        delete[] str;
+        cout << "Destructor\t" << this << endl;
+    }
+    //      Methods
+    void print()const{
+        cout << "Size  :\t" << size << endl;
+        cout << "String:\t" << str << endl;
+    }
+    //operators
+    String& operator=(const String& other){
+        this->size = other.size;
+        delete []this->str;
+        this->str = new char[size]{};
+        for (int i = 0; i < size; i++){
+            this->str[i] = other.str[i];
+        }
+        cout << "Move assigment constrictor" << endl;
+        return *this;
+    }
+    char operator[](int i)const{
+        return str[i];
+    }
+};
 int main() {
     setlocale(LC_ALL, "");
-    cout << line;
-    Fraction One(2, 4, -8);
-    cout << One << " reduced: " << One.reduce() << " improper: " << One.to_improper() << "Proper: " << One.to_proper() << endl;
-    cout << line;
-    Fraction Two = One;
-    cout << One << " = " << Two << endl;
-    cout << line;
-    cout << "Сложение:" << endl;
-    Fraction Three = Two + One;
-    cout << Two << " + " << Two << " = " << Three << endl;
-    cout << line;
-    cout << "Вычиание:" << endl;
-    Three.set_denumenator(5);
-    Three.set_numerator(3);
-    Fraction Four = Two - Three;
-    cout << Two << " - " << Three << " = " << Four << endl;
-    cout << line;
-    cout << "Умножение:" << endl;
-    Fraction Five = One * Two;
-    cout << One << " * " << Two  << " = " << Five << endl;
-    cout << line;
-    cout << "Деление:" << endl;
-    Five = One / Two;
-    cout << One << " / " << Two << " = " << Five << endl;
-    cout << line;
-    cout << Five << " += " << One << endl;
-    Five += One;
-    cout <<  Five << endl;
-    cout << line;
-    cout << Five << " -= " << One << endl;
-    Five -= One;
-    cout << Five << endl;
-    cout << line;
-    cout << Three << " *= " << One << endl;
-    Three *= One;
-    cout << Three << endl;
-    cout << line;
-    cout << Five << " /= " << One << endl;
-    Five /= One;
-    cout << Five << endl;
-    cout << line;
-    cout << Five << "--" << endl;
-    Five--;
-    cout << Five << endl;
-    cout << line;
-    cout << "Сравнение: " << endl;
-    cout << Three << " <= " << Three << "результат :" << (Three <= Three) << endl;
-    cout << line;
-    Fraction InputFract;
-    cin >> InputFract;
-    cout << "Введенная дробь: " << InputFract << endl;
+    String str01 = "World!";
+    str01.print();
+    String str02 = "Hello!";
+    str02.print();
+    String str03("TEST");
+    cout << str03 << endl;
+    String str04(str01);
+    cout << str04 << endl;
+    str04 = str01 + str02;
+    cout << str04 << endl;
+    str04 += str03;
+    cout << str04 << endl;
+    //str02 = str02;
+    //str03.print();
     return 0;
 }
-inline Fraction operator+(Fraction one, Fraction two){
-    Fraction result(one.to_improper().get_numerator()*two.get_denumenator()+
-        one.get_denumenator()*two.to_improper().get_numerator(),one.get_denumenator()*two.get_denumenator());
-    return result.reduce().to_proper();
-}
-inline Fraction operator-(Fraction one, Fraction two){
-    Fraction result(one.to_improper().get_numerator()*two.get_denumenator()-
-                    one.get_denumenator()*two.to_improper().get_numerator(),one.get_denumenator()*two.get_denumenator());
-    return result.reduce().to_proper();
-}
-inline Fraction operator*(Fraction one, Fraction two){
-    Fraction result(one.to_improper().get_numerator()*two.to_improper().get_numerator(),
-                    one.get_denumenator()*two.get_denumenator());
-    return result.to_proper().reduce();
-}
-inline Fraction operator/(Fraction one, Fraction two){
-    Fraction result(one.to_improper().get_numerator()*two.get_denumenator(),
-                    two.to_improper().get_numerator()*one.get_denumenator());
-    return result.reduce().to_proper();
-}
-ostream& operator<<(ostream& os, Fraction& fract){
-    if (fract.get_integer()) {
-        cout << fract.get_integer();
-        if (fract.get_numerator()){
-            cout << "(" << fract.get_numerator() << "/" << fract.get_denumenator() << ")";
-        }
-        return os;
-    } else if (fract.get_numerator()){
-        cout << fract.get_numerator() << "/" << fract.get_denumenator();
-        return os;
+String operator+(String &one, String &two){
+    char* newstr = new char[one.get_size()+two.get_size()]{};
+    for(int i = 0; i < one.get_size(); i++){
+        newstr[i] = one[i];
     }
-    cout << 0;
-    return os;
-}
-istream& operator>>(istream& in, Fraction& fract){
-    cout << "Введите целую часть: ";
-    int i_input = check_int_input();
-    fract.set_integer(i_input);
-    cout << "Введите числитель: ";
-    i_input = check_int_input();
-    fract.set_numerator(i_input);
-    cout << "Введите знаменатель: ";
-    i_input = check_int_input();
-    fract.set_denumenator(i_input);
-    return in;
-}
-bool operator<(Fraction one, Fraction two){
-    casting_fractions(one, two);
-    return (one.get_numerator() < two.get_numerator())?true: false;
-}
-bool operator<=(Fraction one, Fraction two){
-    casting_fractions(one, two);
-    return (one.get_numerator() <= two.get_numerator())?true: false;
-}
-bool operator>(Fraction one, Fraction two){
-    casting_fractions(one, two);
-    return (one.get_numerator() > two.get_numerator())?true: false;
-}
-bool operator>=(Fraction one, Fraction two){
-    casting_fractions(one, two);
-    return (one.get_numerator() >= two.get_numerator())?true: false;
-}
-bool operator==(Fraction one, Fraction two){
-    casting_fractions(one, two);
-    return (one.get_numerator() == two.get_numerator())?true: false;
-}
-void casting_fractions(Fraction& one, Fraction& two){
-    one.to_improper().set_numerator(one.get_numerator()*two.get_denumenator());
-    two.to_improper().set_numerator(two.get_numerator()*one.get_denumenator());
-    one.set_denumenator(one.get_denumenator()*two.get_denumenator());
-    two.set_denumenator(one.get_denumenator());
-}
-int char_input(char arr[], bool& succes){
-    int result = 0;
-    int len = 0;
-    for (int i = 0; i < int_input; i++){
-        if(arr[i]){
-            len++;
-        }else{
-            break;
-        }
+    for(int i = 0; i < two.get_size(); i++){
+        newstr[i + one.get_size()] = two[i];
     }
-    int multiplier = 1;
-    for (int i = len-1; i > 0; i--) {
-        if (arr[i] > 47 && arr[i] < 58) {
-            result += ((int(arr[i]) - 48) * multiplier);
-            multiplier *= 10;
-        } else {
-            cout << "Введено некорректное значение!" << endl;
-            succes = false;
-            return 0;
-        }
-    }
-        if (arr[0] == 45){
-            result *= -1;
-        }else{
-            if (arr[0] > 47 && arr[0] < 58){
-                result += ((int(arr[0])-48)*multiplier);
-            }else{
-                cout << "Введено некорректное значение!" << endl;
-                succes = false;
-                return 0;
-            }
-        }
-        succes = true;
-        return result;
-}
-int check_int_input(){
-    bool succes = false;
-    char input[int_input]{};
-    int result;
-    do {
-        cin.getline(input,int_input);
-        result = char_input(input, succes);
-    }while(!succes);
+    String result(newstr);
+    delete []newstr;
     return result;
+}
+void operator+=(String &one, String &two){
+    one = one + two;
+}
+ostream& operator<<(ostream& ist, String &one){
+    one.print();
+    return ist;
 }
