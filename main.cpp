@@ -54,7 +54,7 @@ public:
         for (int i = 0; i < size; i++){
             this->str[i] = other.str[i];
         }
-        cout << "Move assigment constrictor" << endl;
+        cout << "Copy assigment constrictor" << endl;
         return *this;
     }
     char operator[](int i)const{
