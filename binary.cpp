@@ -20,6 +20,17 @@ char* binary::get_binary()const{
     }
     return result;
 }
+char* binary::get_binary(){
+    char* result = new char[this->degree]{};
+    for (int i = 0; i <= this->degree; i++){
+        if (this->binary_numbers[i]){
+            result[i] = '1';
+        }else{
+            result[i] = '0';
+        }
+    }
+    return result;
+}
 void binary::set_degree(int i){
     int result = 0, div_result;
     do{
@@ -28,6 +39,22 @@ void binary::set_degree(int i){
         result++;
     } while (i > 1);
     this->degree = result;
+}
+void binary::set_to_degree(int number){
+    if (number <= degree)return;
+    bool* tmp = new bool[degree];
+    for (int i = 0; i <= degree; i++){
+        tmp[i] = binary_numbers[i];
+    }
+    delete[] binary_numbers;
+    binary_numbers = new bool[number]{};
+    int count = degree;
+    for (int i = number; i >= degree; i--){
+        binary_numbers[i] = tmp[count];
+        count--;
+    }
+    delete[] tmp;
+    degree = number;
 }
 int binary::to_decimal(){
     int result = 0, degree = 0;
@@ -52,10 +79,21 @@ void binary::set_binary(int number){
         number /= 2;
     }
 }
-binary& binary::binary_input(){
-    int input = 0;
-    cout << "Enter any decimal number: ";cin >> input;
-    *this = input;
+binary& binary::binary_input(){//One more method to input binary
+    char input[30]{};
+    cout << "Enter binary number. 0 mean 0, any other mean 1: ";cin >> input;
+    int count = 0;
+    cout << input << endl;
+    for (int i = 0; input[i] != '\0'; i++){
+        count++;
+    }
+    cout << count << endl;
+    delete [] this->binary_numbers;
+    this->binary_numbers = new bool[count];
+    for (int i = count - 1; i >= 0; i--){
+        input[i]== '0' ? binary_numbers[i] = 0 : binary_numbers[i] = 1;
+    }
+    this->degree = count - 1;
     return *this;
 }
 binary::binary(int number){
@@ -129,5 +167,40 @@ binary operator/(const binary& one, const binary& two){
         return 0;
     }
     binary result(one.to_decimal() / two.to_decimal());
+    return result;
+}
+binary& binary::operator~(){
+    for (int i = 0; i <= this->degree; i++)
+        binary_numbers[i] ? binary_numbers[i] = false : binary_numbers[i] = true;
+    return *this;
+}
+bool& binary::operator[](int i){
+    return binary_numbers[i];
+}
+binary operator|(binary one, binary two){
+    (one.get_degree() > two.get_degree()) ? two.set_to_degree(one.get_degree()) : one.set_to_degree(two.get_degree());
+    binary result(0);
+    result.set_to_degree(one.get_degree());
+    for (int i = 0; i <= one.get_degree(); i++){
+        (one[i] || two[i]) ? result[i] = 1 : result[i] = 0;
+    }
+    return result;
+}
+binary operator&(binary one, binary two){
+    (one.get_degree() > two.get_degree()) ? two.set_to_degree(one.get_degree()) : one.set_to_degree(two.get_degree());
+    binary result(0);
+    result.set_to_degree(one.get_degree());
+    for (int i = 0; i <= one.get_degree(); i++){
+        (one[i] && two[i]) ? result[i] = 1 : result[i] = 0;
+    }
+    return result;
+}
+binary operator^(binary one, binary two){
+    (one.get_degree() > two.get_degree()) ? two.set_to_degree(one.get_degree()) : one.set_to_degree(two.get_degree());
+    binary result(0);
+    result.set_to_degree(one.get_degree());
+    for (int i = 0; i <= one.get_degree(); i++){
+        (one[i] || two[i]) ? result[i] = 0 : result[i] = 1;
+    }
     return result;
 }
